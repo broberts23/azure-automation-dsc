@@ -1,0 +1,7 @@
+blog*.md
+*.jpg
+*.png
+**/*.zip
+**/*.mof
+*.mof
+*.bicepparam
