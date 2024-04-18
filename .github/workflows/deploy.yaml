@@ -19,7 +19,7 @@ jobs:
     environment: dev
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Login via Azure CLI
         uses: azure/login@v2
@@ -44,7 +44,7 @@ jobs:
     needs: [validate]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: Login via Azure CLI
         uses: azure/login@v2
