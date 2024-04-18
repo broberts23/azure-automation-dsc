@@ -1,5 +1,5 @@
 @description('Username for the Virtual Machine.')
-param adminUsername string
+param adminUsername string = 'adminuser'
 
 @description('Password for the Virtual Machine.')
 @minLength(12)
@@ -61,7 +61,7 @@ param vmSize string = 'Standard_D2s_v5'
 param location string = resourceGroup().location
 
 @description('Name of the virtual machine.')
-param vmName string = 'simple-vm'
+param vmName string = 'dscvm'
 
 @description('This is the built-in Storage Account Contributor role. See https://docs.microsoft.com/azure/role-based-access-control/built-in-roles')
 resource storageBlobContributorRole 'Microsoft.Authorization/roleDefinitions@2022-05-01-preview' existing = {
