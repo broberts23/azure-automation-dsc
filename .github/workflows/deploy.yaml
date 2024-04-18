@@ -34,7 +34,7 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az deployment group validate --resource-group ${{ env.resource-group }} --name  ${{ env.rollout-name }} --template-file vm_dsc.bicep --parameters .\param.bicepparam
+            az deployment group validate --resource-group ${{ env.resource-group }} --name  ${{ env.rollout-name }} --template-file vm_dsc.bicep --parameters adminPassword= ${{ secrets.ADMINPASSWORD }}
 
 
   deploy_and_test:
