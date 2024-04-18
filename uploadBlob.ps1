@@ -32,7 +32,7 @@ Write-Output "${env:CONTENT}" > ConfigureWebServer_base.ps1
 
 # Upload the file to the blob storage account
 try {
-    $output = Set-AzStorageBlobContent -File ConfigureWebServer_base.ps1 -Container dsc -Blob ConfigureWebServer_base.ps1 -Context $workingContext
+    $output = Set-AzStorageBlobContent -File ConfigureWebServer_base.ps1 -Container dsc -Blob ConfigureWebServer_base.ps1 -Context $workingContext -Force
 }
 catch {
     Write-Host $Error[0].Exception.Message
