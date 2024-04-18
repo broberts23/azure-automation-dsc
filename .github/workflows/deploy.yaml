@@ -45,7 +45,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+      
+      - name: Login via Azure CLI
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    
       - name: Deploy Bicep template
         id: deploy
         uses: azure/CLI@v2      
@@ -56,7 +63,7 @@ jobs:
             publicIP=$(az deployment group show --resource-group ${{ env.resource-group }} --name  ${{ env.rollout-name }} --query 'properties.outputs.publicIP.value' -o tsv)
             echo "::set-output name=publicIP::$publicIP"
 
-      - name: Azure PowerShell script
+      - name: Testing Website Accessibility
         uses: azure/powershell@v2
         with:
           azPSVersion: "latest"
