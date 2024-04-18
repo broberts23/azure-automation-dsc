@@ -63,10 +63,10 @@ param location string = resourceGroup().location
 @description('Name of the virtual machine.')
 param vmName string = 'simple-vm'
 
-@description('This is the built-in Storage Blob Data Contributor role. See https://docs.microsoft.com/azure/role-based-access-control/built-in-roles')
+@description('This is the built-in Storage Account Contributor role. See https://docs.microsoft.com/azure/role-based-access-control/built-in-roles')
 resource storageBlobContributorRole 'Microsoft.Authorization/roleDefinitions@2022-05-01-preview' existing = {
   scope: subscription()
-  name: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
+  name: '17d1049b-9a84-46fb-8f53-869881c3d3ab'
 }
 
 @description('Command to execute on the Virtual Machine.')
@@ -245,47 +245,13 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   }
 }
 
-// Deployment Script for VM Extension
-resource deploymentScript 'Microsoft.Resources/deploymentScripts@2023-08-01' = {
-  name: 'inlinePS'
-  location: location
-  kind: 'AzurePowerShell'
-  identity: {
-    type: 'UserAssigned'
-    // User Assigned Identity for the Deployment Script to access the Storage Account
-    userAssignedIdentities: {
-      '${umi.id}': {}
-    }
+module deploymentScript 'modules/deploymentScript.bicep' = {
+  name: 'deploymentScript'
+  params: {
+    location: location
+    storageAccountName: storageAccount.name
+    umiId: umi.id
   }
-  properties: {
-    azPowerShellVersion: '11.4'
-    retentionInterval: 'PT1H'
-    cleanupPreference: 'OnSuccess'
-    environmentVariables: [
-      {
-        name: 'AZURE_STORAGE_ACCOUNT'
-        value: storageAccount.name
-      }
-      {
-        name: 'CONTENT'
-        // Imports the content of a file - in this case, the PowerShell script
-        // that will be uploaded to the Storage Account
-        // This is stored as a Environment Variable in the deploymentScripts
-        // environment as a string
-        value: loadTextContent('ConfigureWebServer_base.ps1')
-      }
-      {
-        name: 'AZURE_RESOURCE_GROUP'
-        value: resourceGroup().name
-      }
-    ]
-    // arguments: saName
-    scriptContent: loadTextContent('uploadBlob.ps1')
-  }
-  dependsOn: [
-    // This ensures that the Storage Account and role assignment are created before the deployment script
-    roleAssignment
-  ]
 }
 
 // Create Virtual Machine
@@ -343,17 +309,16 @@ resource vmExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-01' =
   properties: {
     publisher: extentionsProperties.publisher
     type: extentionsProperties.type
-    typeHandlerVersion: extentionsProperties.version
+    typeHandlerVersion: extentionsProperties.typeHandlerVersion
     autoUpgradeMinorVersion: true
     settings: {
       fileUris: [
         // Uri derived from the output of the deployment script: See uploadBlob.ps1
-        deploymentScript.properties.outputs.text.ICloudBlob.Uri
+        deploymentScript.outputs.result
       ]
       commandToExecute: commandToExecute
     }
   }
 }
 
-output result string = deploymentScript.properties.outputs.text.ICloudBlob.Uri
 output publicIP string = publicIp.properties.ipAddress
