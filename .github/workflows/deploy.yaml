@@ -43,6 +43,9 @@ jobs:
     environment: dev
     needs: [validate]
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
       - name: Deploy Bicep template
         id: deploy
         uses: azure/CLI@v2      
