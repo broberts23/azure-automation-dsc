@@ -60,6 +60,7 @@ jobs:
           azcliversion: latest
           inlineScript: |
             az deployment group create --resource-group ${{ env.resource-group }} --name  ${{ env.rollout-name }} --template-file vm_dsc.bicep --parameters adminPassword=${{ secrets.ADMINPASSWORD }}
+            # Get the public IP address of the deployed VM
             publicIP=$(az deployment group show --resource-group ${{ env.resource-group }} --name  ${{ env.rollout-name }} --query 'properties.outputs.publicIP.value' -o tsv)
             echo "::set-output name=publicIP::$publicIP"
 
