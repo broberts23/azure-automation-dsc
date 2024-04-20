@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 env:
-  resource-group: RG1 # name of the Azure resource group
+  resource-group: RG2 # name of the Azure resource group
   rollout-name: rollout01 # name of the deployment
   environment: dev
 
