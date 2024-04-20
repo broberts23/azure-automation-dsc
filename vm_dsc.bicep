@@ -99,9 +99,7 @@ module virtualNetwork 'br/public:avm/res/network/virtual-network:0.1.5' = {
       {
         addressPrefix: '10.0.1.0/24'
         name: 'sbnmin001'
-        networkSecurityGroup: {
-          id: networkSecurityGroup.outputs.resourceId
-        }
+        networkSecurityGroupResourceId: networkSecurityGroup.outputs.resourceId
       }
       {
         addressPrefix: '10.0.2.0/24'
