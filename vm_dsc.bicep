@@ -17,14 +17,14 @@ param publicIpName string = 'myPublicIP'
   'Dynamic'
   'Static'
 ])
-param publicIPAllocationMethod string = 'Dynamic'
+param publicIPAllocationMethod string = 'Static'
 
 @description('SKU for the Public IP used to access the Virtual Machine.')
 @allowed([
   'Basic'
   'Standard'
 ])
-param publicIpSku string = 'Basic'
+param publicIpSku string = 'Standard'
 
 @description('The Windows version for the VM. This will pick a fully patched image of this given Windows version.')
 @allowed([
@@ -321,4 +321,4 @@ resource vmExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-01' =
   }
 }
 
-output publicIP string = publicIp.properties.publicIPAllocationMethod == 'Dynamic' ? '' : publicIp.properties.ipAddress
+output publicIP string = publicIp.properties.ipAddress
