@@ -321,4 +321,4 @@ resource vmExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-01' =
   }
 }
 
-output publicIP string = publicIp.properties.servicePublicIPAddress.properties.ipAddress
+output publicIP object = publicIp.properties
